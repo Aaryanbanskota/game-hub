@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameHub - Premium Gaming Portal</title>
+    <style>
+        /* ===== CSS Variables ===== */
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --text: #f5f6fa;
+            --bg: #2d3436;
+            --card-bg: rgba(45, 52, 54, 0.7);
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --glass: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+            --neon: 0 0 10px var(--accent), 0 0 20px var(--accent), 0 0 30px var(--accent);
+        }
+
+        [data-theme="light"] {
+            --text: #2d3436;
+            --bg: #f5f6fa;
+            --card-bg: rgba(245, 246, 250, 0.9);
+            --glass: rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== Base Styles ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(253, 121, 168, 0.2) 0%, transparent 20%);
+            background-attachment: fixed;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* ===== Typography ===== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(108, 92, 231, 0.3);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            border-radius: 3px;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(253, 121, 168, 0.5);
+        }
+
+        /* ===== Buttons ===== */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.6);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            opacity: 0;
+            z-index: -1;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 15px rgba(253, 121, 168, 0.4);
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(253, 121, 168, 0.6);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: #2d3436;
+            box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(253, 203, 110, 0.6);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(214, 48, 49, 0.6);
+        }
+
+        .btn-neon {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            box-shadow: var(--neon);
+            animation: neon-pulse 2s infinite alternate;
+        }
+
+        @keyframes neon-pulse {
+            from {
+                box-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent);
+            }
+            to {
+                box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent);
+            }
+        }
+
+        /* ===== Glassmorphism Cards ===== */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        /* ===== Layout ===== */
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @media (max-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-3, .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Navbar ===== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(45, 52, 54, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 1rem 5%;
+            background: rgba(45, 52, 54, 0.95);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            color: var(--accent);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(108, 92, 231, 0.1), transparent 70%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50%;
+            max-width: 700px;
+            opacity: 0.9;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(-50%) translateX(0);
+            }
+            50% {
+                transform: translateY(-50%) translateX(20px);
+            }
+        }
+
+        /* ===== Features Section ===== */
+        .features {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(253, 121, 168, 0.05), transparent 50%);
+            z-index: -1;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* ===== Games Section ===== */
+        .games {
+            padding: 5rem 0;
+        }
+
+        .game-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .game-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--warning);
+            margin: 0.5rem 0;
+        }
+
+        .game-platforms {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .platform-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .platform-icon:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .game-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== Popular Games Box ===== */
+        .popular-games-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .popular-games-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.4);
+        }
+
+        .popular-games-box h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .popular-games-box p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .click-here-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: white;
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: bold;
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+        }
+
+        .click-here-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .popular-games-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3rem 0;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass);
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-image {
+                width: 40%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 5%;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 80px);
+                background: var(--bg);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                transition: var(--transition);
+                z-index: 999;
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 100px;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+                margin-bottom: 3rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-image {
+                position: relative;
+                width: 100%;
+                max-width: 500px;
+                transform: none;
+                margin-top: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Utility Classes ===== */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mt-3 { margin-top: 3rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .mb-3 { margin-bottom: 3rem; }
+        .py-3 { padding-top: 3rem; padding-bottom: 3rem; }
+        .px-2 { padding-left: 2rem; padding-right: 2rem; }
+
+        /* ===== Game Details Modal ===== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transform: translateY(50px);
+            transition: var(--transition);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .modal-game-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-game-poster {
+            width: 300px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .modal-game-info {
+            flex: 1;
+        }
+
+        .modal-game-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-game-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-game-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+        }
+
+        .modal-game-description {
+            margin-bottom: 2rem;
+        }
+
+        .modal-game-screenshots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-game-screenshot {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-game-screenshot:hover {
+            transform: scale(1.05);
+        }
+
+        .modal-game-trailer {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-game-header {
+                flex-direction: column;
+            }
+            
+            .modal-game-poster {
+                width: 100%;
+            }
+            
+            .modal-game-screenshots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .modal-game-trailer {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-game-screenshots {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Toast Notifications ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 3000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ===== APK Warning Modal ===== */
+        .apk-warning {
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* ===== Crazy Features ===== */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .game-of-the-day {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--accent);
+            box-shadow: var(--neon);
+            animation: neon-pulse 2s infinite alternate;
+        }
+
+        .game-of-the-day::before {
+            content: 'GAME OF THE DAY';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .voice-search-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .voice-search-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-search-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: var(--danger);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(253, 121, 168, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(253, 121, 168, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(253, 121, 168, 0);
+            }
+        }
+
+        /* ===== Game Comparison ===== */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass);
+        }
+
+        .comparison-table th {
+            background: var(--glass);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--glass);
+        }
+
+        /* ===== Easter Egg ===== */
+        .easter-egg {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            opacity: 0.3;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .easter-egg:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Particles Background -->
+    <canvas class="particles" id="particles"></canvas>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="logo">
+            <i class="fas fa-gamepad logo-icon"></i>
+            <span>GameHub</span>
+        </a>
+        <div class="nav-links">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#games" class="nav-link">Games</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content fade-in">
+                <h1 class="hero-title">Ultimate Gaming Experience</h1>
+                <p class="hero-subtitle">Discover, download, and play the best games across all platforms. Get direct download links, official store purchases, and exclusive content.</p>
+                <div class="hero-buttons">
+                    <a href="#games" class="btn btn-primary">Browse Games</a>
+                    <a href="https://discord.gg/3N8DD7UA" class="btn btn-neon" target="_blank">Join Our Discord</a>
+                </div>
+            </div>
+            <img src="https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png" 
+                 alt="Gaming Collage" 
+                 class="hero-image fade-in delay-1"
+                 onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'">
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features py-3" id="features">
+        <div class="container">
+            <h2 class="section-title fade-in">Premium Features</h2>
+            <div class="grid grid-3">
+                <div class="feature-card card fade-in delay-1">
+                    <i class="fas fa-bolt feature-icon"></i>
+                    <h3>Direct Downloads</h3>
+                    <p>Get direct APK download links for Android games, bypassing the Play Store when needed.</p>
+                </div>
+                <div class="feature-card card fade-in delay-2">
+                    <i class="fas fa-shopping-cart feature-icon"></i>
+                    <h3>Official Stores</h3>
+                    <p>One-click access to official purchase pages on Steam, Epic, PlayStation Store and more.</p>
+                </div>
+                <div class="feature-card card fade-in delay-3">
+                    <i class="fas fa-robot feature-icon"></i>
+                    <h3>PC & Mobile</h3>
+                    <p>Complete coverage for both PC and mobile gaming with optimized download options.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section class="games py-3" id="games">
+        <div class="container">
+            <h2 class="section-title fade-in">Popular Games</h2>
+            <div class="grid grid-4" id="gamesContainer">
+                <!-- Games will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Games Box -->
+    <section class="container">
+        <div class="popular-games-box fade-in">
+            <h3>Looking for more games?</h3>
+            <p>Explore our extensive collection of premium games across all platforms</p>
+            <a href="additionallink.html" class="click-here-btn">Click Here!</a>
+        </div>
+    </section>
+
+    <!-- Game of the Day Section -->
+    <section class="py-3">
+        <div class="container">
+            <h2 class="section-title fade-in">Game of the Day</h2>
+            <div id="gameOfTheDay" class="card game-of-the-day fade-in">
+                <!-- Game of the day will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about py-3" id="about">
+        <div class="container">
+            <h2 class="section-title fade-in">About GameHub</h2>
+            <div class="card fade-in delay-1">
+                <p>GameHub is the ultimate gaming portal created by Aaryan Banskota, combining the best of official game stores and direct downloads in one place.</p>
+                <p class="mt-1">Our mission is to provide gamers with the most convenient way to access their favorite games across all platforms, whether through official channels or trusted third-party sources when needed.</p>
+                <div class="mt-2">
+                    <a href="https://www.instagram.com/its.aaryan_01/" class="btn btn-accent" target="_blank">Follow Creator</a>
+                    <a href="https://www.facebook.com/aaryan.baskota.2025" class="btn btn-primary ml-2" target="_blank">Facebook</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact py-3" id="contact">
+        <div class="container">
+            <h2 class="section-title fade-in">Get In Touch</h2>
+            <div class="card fade-in delay-1">
+                <form id="contactForm">
+                    <div class="grid grid-2">
+                        <div>
+                            <label for="name">Name</label>
+                            <input type="text" id="name" class="card" placeholder="Your name" required>
+                        </div>
+                        <div>
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="card" placeholder="Your email" required>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" class="card" placeholder="Subject">
+                    </div>
+                    <div class="mt-1">
+                        <label for="message">Message</label>
+                        <textarea id="message" class="card" rows="5" placeholder="Your message" required></textarea>
+                    </div>
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <i class="fas fa-gamepad"></i> GameHub
+                    </div>
+                    <p>The ultimate gaming discovery platform. Find your next favorite game today.</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/its.aaryan_01/" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/aaryan.baskota.2025" class="social-link" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://discord.gg/3N8DD7UA" class="social-link" target="_blank"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Explore</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#games">Games</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="https://discord.gg/3N8DD7UA" target="_blank">Community</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 GameHub. Made with 💙 by <a href="https://www.instagram.com/its.aaryan_01/" target="_blank">Aaryan Banskota</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Game Details Modal -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <div id="modalContent">
+                <!-- Modal content will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- APK Warning Modal -->
+    <div class="modal" id="apkModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeApkModal">&times;</button>
+            <h2>APK Download Warning</h2>
+            <p class="mt-1">APK files may contain security risks. Only download from trusted sources.</p>
+            <p class="apk-warning mt-1"><i class="fas fa-exclamation-triangle"></i> We do not host APK files - you are being redirected to an external site.</p>
+            <div class="mt-2">
+                <button class="btn btn-danger" id="proceedApk">Proceed to Download</button>
+                <button class="btn btn-outline" id="cancelApk">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Search Button -->
+    <div class="voice-search-btn" id="voiceSearchBtn">
+        <i class="fas fa-microphone"></i>
+    </div>
+
+    <!-- Easter Egg -->
+    <img src="https://img.icons8.com/color/48/000000/controller.png" class="easter-egg" id="easterEgg" title="Click me!">
+
+    <script>
+        // Enhanced game data with reliable image URLs and backup images
+        const games = [
+            {
+                id: 1,
+                title: "Spider-Man: Miles Morales",
+                genre: "Action-Adventure",
+                platforms: ["ps4", "ps5", "pc"],
+                rating: 4.8,
+                description: "Experience the rise of Miles Morales as the new hero masters incredible, explosive new powers to become his own Spider-Man.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202008/1420/HcLcfeQBXd7i2HCBXwJr17zQ.png",
+                backupImage: "https://images.unsplash.com/photo-1608889825205-eebdb9fc5806?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                screenshots: [
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202008/1420/HcLcfeQBXd7i2HCBXwJr17zQ.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202008/1420/HcLcfeQBXd7i2HCBXwJr17zQ.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202008/1420/HcLcfeQBXd7i2HCBXwJr17zQ.png"
+                ],
+                trailer: "https://www.youtube.com/embed/NTunTURbyUU",
+                releaseDate: "2020-11-12",
+                developer: "Insomniac Games",
+                publisher: "Sony Interactive Entertainment",
+                metacritic: 85,
+                isNew: true,
+                purchaseLink: "https://store.playstation.com/en-us/product/UP9000-PPSA01359_00-SMMMORALES000000",
+                apkLink: null,
+                directDownloadLink: null
+            },
+            {
+                id: 2,
+                title: "Genshin Impact",
+                genre: "Action RPG",
+                platforms: ["pc", "android", "ios", "ps4", "ps5"],
+                rating: 4.7,
+                description: "Genshin Impact is an open-world action RPG where you explore a vast fantasy world called Teyvat. With its anime-style visuals and action-based combat system, it offers a unique gaming experience.",
+                image: "https://i.postimg.cc/vmC5hTP9/ganshin-data.jpg",
+                backupImage: "https://i.postimg.cc/vmC5hTP9/ganshin-data.jpg",
+                screenshots: [
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202009/2419/TBxaP3HvnlqWaIpdlxJR4U1t.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202009/2419/6X1ujxzziqqPJX1eKmJHgQxG.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202009/2419/6X1ujxzziqqPJX1eKmJHgQxG.png"
+                ],
+                trailer: "https://www.youtube.com/embed/TAlKhARUcoY",
+                releaseDate: "2020-09-28",
+                developer: "miHoYo",
+                publisher: "miHoYo",
+                metacritic: 84,
+                isNew: false,
+                purchaseLink: "https://genshin.hoyoverse.com",
+                apkLink: "https://genshin.hoyoverse.com/en/download",
+                directDownloadLink: "https://genshin.hoyoverse.com/en/download"
+            },
+            {
+                id: 3,
+                title: "Call of Duty: Mobile",
+                genre: "FPS",
+                platforms: ["android", "ios"],
+                rating: 4.5,
+                description: "Call of Duty: Mobile brings together the classic multiplayer modes, maps, and characters from across the Call of Duty franchise into the ultimate first-person shooter on mobile.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                backupImage: "https://images.unsplash.com/photo-1612287230202-983ff0f44775?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                screenshots: [
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png"
+                ],
+                trailer: "https://www.youtube.com/embed/6bQk0eQhYwY",
+                releaseDate: "2019-10-01",
+                developer: "TiMi Studios",
+                publisher: "Activision",
+                metacritic: 82,
+                isNew: false,
+                purchaseLink: null,
+                apkLink: "https://www.callofduty.com/mobile/download",
+                directDownloadLink: "https://www.callofduty.com/mobile/download"
+            },
+            {
+                id: 4,
+                title: "Minecraft",
+                genre: "Sandbox",
+                platforms: ["pc", "android", "ios", "xbox", "ps4", "switch"],
+                rating: 4.8,
+                description: "Minecraft is a sandbox video game where players explore a blocky, procedurally-generated 3D world with infinite terrain, and may discover and extract raw materials, craft tools and items, and build structures or earthworks.",
+                image: "https://image.api.playstation.com/vulcan/img/rnd/202011/0714/vuF88yWPSnDfmFJVTyNJpVwW.png",
+                backupImage: "https://images.unsplash.com/photo-1627855437693-dcc7b0c4ba7b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                screenshots: [
+                    "https://image.api.playstation.com/vulcan/img/rnd/202011/0714/vuF88yWPSnDfmFJVTyNJpVwW.png",
+                    "https://image.api.playstation.com/vulcan/img/rnd/202011/0714/vuF88yWPSnDfmFJVTyNJpVwW.png",
+                    "https://image.api.playstation.com/vulcan/img/rnd/202011/0714/vuF88yWPSnDfmFJVTyNJpVwW.png"
+                ],
+                trailer: "https://www.youtube.com/embed/MmB9b5njVbA",
+                releaseDate: "2011-11-18",
+                developer: "Mojang Studios",
+                publisher: "Xbox Game Studios",
+                metacritic: 93,
+                isNew: false,
+                purchaseLink: "https://www.minecraft.net",
+                apkLink: "https://www.minecraft.net/en-us/download",
+                directDownloadLink: "https://www.minecraft.net/en-us/download"
+            },
+            {
+                id: 5,
+                title: "PUBG Mobile",
+                genre: "Battle Royale",
+                platforms: ["android", "ios"],
+                rating: 4.4,
+                description: "PUBG Mobile is a free-to-play battle royale video game developed by LightSpeed & Quantum Studio, a division of Tencent Games. It is a mobile game adaptation of PUBG: Battlegrounds.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                backupImage: "https://images.unsplash.com/photo-1612287230202-983ff0f44775?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                screenshots: [
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png"
+                ],
+                trailer: "https://www.youtube.com/embed/6bQk0eQhYwY",
+                releaseDate: "2018-03-19",
+                developer: "LightSpeed & Quantum Studio",
+                publisher: "Tencent Games",
+                metacritic: 81,
+                isNew: false,
+                purchaseLink: null,
+                apkLink: "https://www.pubgmobile.com/download.html",
+                directDownloadLink: "https://www.pubgmobile.com/download.html"
+            },
+            {
+                id: 6,
+                title: "Fortnite",
+                genre: "Battle Royale",
+                platforms: ["pc", "ps4", "ps5", "xbox", "switch", "android"],
+                rating: 4.3,
+                description: "Fortnite is an online video game developed by Epic Games and released in 2017. It is available in three distinct game mode versions that otherwise share the same general gameplay and game engine.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202011/1612/lqV56z6wGjDmUjP3Sf8GfN7i.png",
+                backupImage: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                screenshots: [
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202011/1612/lqV56z6wGjDmUjP3Sf8GfN7i.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202011/1612/lqV56z6wGjDmUjP3Sf8GfN7i.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202011/1612/lqV56z6wGjDmUjP3Sf8GfN7i.png"
+                ],
+                trailer: "https://www.youtube.com/embed/2gUtfBmw86Y",
+                releaseDate: "2017-07-25",
+                developer: "Epic Games",
+                publisher: "Epic Games",
+                metacritic: 78,
+                isNew: false,
+                purchaseLink: "https://www.epicgames.com/fortnite",
+                apkLink: "https://www.epicgames.com/fortnite/en-US/mobile/get-started",
+                directDownloadLink: "https://www.epicgames.com/fortnite/en-US/mobile/get-started"
+            },
+            {
+                id: 7,
+                title: "Apex Legends Mobile",
+                genre: "Battle Royale",
+                platforms: ["android", "ios"],
+                rating: 4.2,
+                description: "Apex Legends Mobile is a free-to-play battle royale-hero shooter game developed by Respawn Entertainment and published by Electronic Arts for Android and iOS.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                backupImage: "https://images.unsplash.com/photo-1612287230202-983ff0f44775?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                screenshots: [
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png"
+                ],
+                trailer: "https://www.youtube.com/embed/6bQk0eQhYwY",
+                releaseDate: "2022-05-17",
+                developer: "Respawn Entertainment",
+                publisher: "Electronic Arts",
+                metacritic: 82,
+                isNew: true,
+                purchaseLink: null,
+                apkLink: "https://www.ea.com/games/apex-legends/mobile",
+                directDownloadLink: "https://www.ea.com/games/apex-legends/mobile"
+            },
+            {
+                id: 8,
+                title: "Roblox",
+                genre: "Sandbox",
+                platforms: ["pc", "android", "ios", "xbox"],
+                rating: 4.1,
+                description: "Roblox is an online game platform and game creation system that allows users to program games and play games created by other users. Created by David Baszucki and Erik Cassel in 2004.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                backupImage: "https://images.unsplash.com/photo-1627855437693-dcc7b0c4ba7b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                screenshots: [
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png",
+                    "https://image.api.playstation.com/vulcan/ap/rnd/202010/0222/niMUubp4QlOOQ8XDiXKcJZxN.png"
+                ],
+                trailer: "https://www.youtube.com/embed/eAvXhNlO-rA",
+                releaseDate: "2006-09-01",
+                developer: "Roblox Corporation",
+                publisher: "Roblox Corporation",
+                metacritic: 83,
+                isNew: false,
+                purchaseLink: "https://www.roblox.com",
+                apkLink: "https://www.roblox.com/download",
+                directDownloadLink: "https://www.roblox.com/download"
+            }
+        ];
+
+        // DOM Elements
+        const gamesContainer = document.getElementById('gamesContainer');
+        const gameOfTheDay = document.getElementById('gameOfTheDay');
+        const gameModal = document.getElementById('gameModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+        const themeToggle = document.getElementById('themeToggle');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.querySelector('.nav-links');
+        const contactForm = document.getElementById('contactForm');
+        const apkModal = document.getElementById('apkModal');
+        const closeApkModal = document.getElementById('closeApkModal');
+        const proceedApk = document.getElementById('proceedApk');
+        const cancelApk = document.getElementById('cancelApk');
+        const voiceSearchBtn = document.getElementById('voiceSearchBtn');
+        const easterEgg = document.getElementById('easterEgg');
+        const particlesCanvas = document.getElementById('particles');
+
+        // Current APK link for warning modal
+        let currentApkLink = '';
+        let currentDirectDownloadLink = '';
+
+        // Initialize particles
+        function initParticles() {
+            const canvas = particlesCanvas;
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 100;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    speedX: Math.random() * 1 - 0.5,
+                    speedY: Math.random() * 1 - 0.5,
+                    color: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    
+                    if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+                }
+                
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // Set game of the day
+        function setGameOfTheDay() {
+            const today = new Date().getDate();
+            const gameIndex = today % games.length;
+            const game = games[gameIndex];
+            
+            gameOfTheDay.innerHTML = `
+                <div class="grid grid-2">
+                    <div>
+                        <img class="card-img" alt="${game.title}">
+                    </div>
+                    <div>
+                        <h3>${game.title}</h3>
+                        <p>${game.genre}</p>
+                        <div class="game-rating">
+                            ${'<i class="fas fa-star"></i>'.repeat(Math.floor(game.rating))}
+                            ${game.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                            ${'<i class="far fa-star"></i>'.repeat(5 - Math.ceil(game.rating))}
+                            <span>${game.rating}</span>
+                        </div>
+                        <div class="game-platforms">
+                            ${game.platforms.map(platform => `
+                                <img src="https://img.icons8.com/color/48/000000/${platform}.png" 
+                                     alt="${platform}" 
+                                     class="platform-icon" 
+                                     title="${platform.toUpperCase()}"
+                                     onerror="this.src='https://img.icons8.com/color/48/000000/controller.png'">
+                            `).join('')}
+                        </div>
+                        <div class="game-actions mt-2">
+                            ${game.purchaseLink ? `
+                                <a href="${game.purchaseLink}" target="_blank" class="btn btn-primary">
+                                    Buy Now
+                                </a>
+                            ` : ''}
+                            ${game.directDownloadLink ? `
+                                <button class="btn btn-warning btn-apk" data-link="${game.directDownloadLink}">
+                                    Direct Download
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-outline btn-view" data-id="${game.id}">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Load game of the day image with fallback
+            const imgElement = gameOfTheDay.querySelector('.card-img');
+            loadImageWithFallback(imgElement, game.image, game.backupImage);
+        }
+
+        // Load image with fallback
+        function loadImageWithFallback(imgElement, primaryUrl, fallbackUrl) {
+            const img = new Image();
+            img.onload = function() {
+                imgElement.src = primaryUrl;
+            };
+            img.onerror = function() {
+                imgElement.src = fallbackUrl;
+                console.warn(`Failed to load image: ${primaryUrl}. Using fallback.`);
+            };
+            img.src = primaryUrl;
+        }
+
+        // Render games
+        function renderGames() {
+            gamesContainer.innerHTML = '';
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card card fade-in';
+                
+                gameCard.innerHTML = `
+                    ${game.isNew ? '<span class="game-badge">NEW</span>' : ''}
+                    <img class="card-img" alt="${game.title}">
+                    <h3>${game.title}</h3>
+                    <p class="text-muted">${game.genre}</p>
+                    <div class="game-rating">
+                        ${'<i class="fas fa-star"></i>'.repeat(Math.floor(game.rating))}
+                        ${game.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                        ${'<i class="far fa-star"></i>'.repeat(5 - Math.ceil(game.rating))}
+                        <span>${game.rating}</span>
+                    </div>
+                    <div class="game-platforms">
+                        ${game.platforms.map(platform => `
+                            <img src="https://img.icons8.com/color/48/000000/${platform}.png" 
+                                 alt="${platform}" 
+                                 class="platform-icon" 
+                                 title="${platform.toUpperCase()}"
+                                 onerror="this.src='https://img.icons8.com/color/48/000000/controller.png'">
+                        `).join('')}
+                    </div>
+                    <div class="game-actions">
+                        ${game.purchaseLink ? `
+                            <a href="${game.purchaseLink}" target="_blank" class="btn btn-primary">
+                                Buy Now
+                            </a>
+                        ` : ''}
+                        ${game.directDownloadLink ? `
+                            <button class="btn btn-warning btn-apk" data-link="${game.directDownloadLink}">
+                                Direct Download
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-outline btn-view" data-id="${game.id}">
+                            View Details
+                        </button>
+                    </div>
+                `;
+                
+                // Load image with fallback
+                const imgElement = gameCard.querySelector('.card-img');
+                loadImageWithFallback(imgElement, game.image, game.backupImage);
+                
+                gamesContainer.appendChild(gameCard);
+            });
+
+            // Add event listeners to view buttons
+            document.querySelectorAll('.btn-view').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const gameId = parseInt(e.target.getAttribute('data-id'));
+                    showGameDetails(gameId);
+                });
+            });
+
+            // Add event listeners to APK buttons
+            document.querySelectorAll('.btn-apk').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentDirectDownloadLink = e.target.getAttribute('data-link');
+                    apkModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+        }
+
+        // Show game details in modal
+        function showGameDetails(gameId) {
+            const game = games.find(g => g.id === gameId);
+            if (!game) return;
+
+            modalContent.innerHTML = `
+                <div class="modal-game-header">
+                    <img class="modal-game-poster" alt="${game.title}">
+                    <div class="modal-game-info">
+                        <h2 class="modal-game-title">${game.title}</h2>
+                        <div class="modal-game-meta">
+                            <div class="modal-game-meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>${new Date(game.releaseDate).toLocaleDateString()}</span>
+                            </div>
+                            <div class="modal-game-meta-item">
+                                <i class="fas fa-building"></i>
+                                <span>${game.developer}</span>
+                            </div>
+                            <div class="modal-game-meta-item">
+                                <i class="fas fa-star"></i>
+                                <span>${game.metacritic}/100 Metacritic</span>
+                            </div>
+                        </div>
+                        <div class="modal-game-description">
+                            <p>${game.description}</p>
+                        </div>
+                        <div class="game-actions">
+                            ${game.purchaseLink ? `
+                                <a href="${game.purchaseLink}" target="_blank" class="btn btn-primary">
+                                    <i class="fas fa-shopping-cart"></i> Buy Now
+                                </a>
+                            ` : ''}
+                            ${game.directDownloadLink ? `
+                                <button class="btn btn-warning btn-apk" data-link="${game.directDownloadLink}">
+                                    <i class="fas fa-download"></i> Direct Download
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+                <h3>Screenshots</h3>
+                <div class="modal-game-screenshots">
+                    <!-- Screenshots will be loaded dynamically -->
+                </div>
+                <h3>Trailer</h3>
+                <iframe src="${game.trailer}" frameborder="0" allowfullscreen class="modal-game-trailer"></iframe>
+            `;
+
+            // Load main poster image
+            const posterImg = modalContent.querySelector('.modal-game-poster');
+            loadImageWithFallback(posterImg, game.image, game.backupImage);
+
+            // Load screenshots
+            const screenshotsContainer = modalContent.querySelector('.modal-game-screenshots');
+            game.screenshots.forEach((screenshot, index) => {
+                const img = document.createElement('img');
+                img.className = 'modal-game-screenshot';
+                img.alt = `${game.title} screenshot ${index + 1}`;
+                loadImageWithFallback(img, screenshot, game.backupImage);
+                screenshotsContainer.appendChild(img);
+            });
+
+            // Add event listeners to APK buttons in modal
+            document.querySelectorAll('.modal .btn-apk').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentDirectDownloadLink = e.target.getAttribute('data-link');
+                    apkModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            gameModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Voice search functionality
+        function initVoiceSearch() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                
+                voiceSearchBtn.addEventListener('click', () => {
+                    if (voiceSearchBtn.classList.contains('listening')) {
+                        recognition.stop();
+                        voiceSearchBtn.classList.remove('listening');
+                        showToast('Voice search stopped');
+                    } else {
+                        recognition.start();
+                        voiceSearchBtn.classList.add('listening');
+                        showToast('Listening... Speak now');
+                    }
+                });
+                
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+                    voiceSearchBtn.classList.remove('listening');
+                    showToast(`Searching for: ${transcript}`);
+                    
+                    // Filter games based on voice input
+                    const filteredGames = games.filter(game => 
+                        game.title.toLowerCase().includes(transcript) || 
+                        game.genre.toLowerCase().includes(transcript)
+                    );
+                    
+                    if (filteredGames.length > 0) {
+                        renderFilteredGames(filteredGames);
+                    } else {
+                        showToast('No games found matching your search');
+                    }
+                };
+                
+                recognition.onerror = (event) => {
+                    voiceSearchBtn.classList.remove('listening');
+                    showToast('Error occurred in recognition: ' + event.error);
+                };
+            } else {
+                voiceSearchBtn.style.display = 'none';
+                console.log('Speech Recognition API not supported');
+            }
+        }
+
+        // Render filtered games
+        function renderFilteredGames(filteredGames) {
+            gamesContainer.innerHTML = '';
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card card fade-in';
+                
+                gameCard.innerHTML = `
+                    ${game.isNew ? '<span class="game-badge">NEW</span>' : ''}
+                    <img class="card-img" alt="${game.title}">
+                    <h3>${game.title}</h3>
+                    <p class="text-muted">${game.genre}</p>
+                    <div class="game-rating">
+                        ${'<i class="fas fa-star"></i>'.repeat(Math.floor(game.rating))}
+                        ${game.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                        ${'<i class="far fa-star"></i>'.repeat(5 - Math.ceil(game.rating))}
+                        <span>${game.rating}</span>
+                    </div>
+                    <div class="game-platforms">
+                        ${game.platforms.map(platform => `
+                            <img src="https://img.icons8.com/color/48/000000/${platform}.png" 
+                                 alt="${platform}" 
+                                 class="platform-icon" 
+                                 title="${platform.toUpperCase()}"
+                                 onerror="this.src='https://img.icons8.com/color/48/000000/controller.png'">
+                        `).join('')}
+                    </div>
+                    <div class="game-actions">
+                        ${game.purchaseLink ? `
+                            <a href="${game.purchaseLink}" target="_blank" class="btn btn-primary">
+                                Buy Now
+                            </a>
+                        ` : ''}
+                        ${game.directDownloadLink ? `
+                            <button class="btn btn-warning btn-apk" data-link="${game.directDownloadLink}">
+                                Direct Download
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-outline btn-view" data-id="${game.id}">
+                            View Details
+                        </button>
+                    </div>
+                `;
+                
+                // Load image with fallback
+                const imgElement = gameCard.querySelector('.card-img');
+                loadImageWithFallback(imgElement, game.image, game.backupImage);
+                
+                gamesContainer.appendChild(gameCard);
+            });
+
+            // Reattach event listeners
+            document.querySelectorAll('.btn-view').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const gameId = parseInt(e.target.getAttribute('data-id'));
+                    showGameDetails(gameId);
+                });
+            });
+
+            document.querySelectorAll('.btn-apk').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentDirectDownloadLink = e.target.getAttribute('data-link');
+                    apkModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+        }
+
+        // Close modals
+        closeModal.addEventListener('click', () => {
+            gameModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        closeApkModal.addEventListener('click', () => {
+            apkModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        cancelApk.addEventListener('click', () => {
+            apkModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        proceedApk.addEventListener('click', () => {
+            window.open(currentDirectDownloadLink, '_blank');
+            apkModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            showToast('You are being redirected to download');
+        });
+
+        // Close modals when clicking outside
+        gameModal.addEventListener('click', (e) => {
+            if (e.target === gameModal) {
+                gameModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        apkModal.addEventListener('click', (e) => {
+            if (e.target === apkModal) {
+                apkModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Theme toggle
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            const icon = themeToggle.querySelector('i');
+            icon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        });
+
+        // Check for saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.querySelector('i').className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Contact form submission
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // In a real app, you would send this data to a server
+            console.log({ name, email, subject, message });
+            
+            showToast('Message sent successfully!');
+            contactForm.reset();
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Easter egg functionality
+        easterEgg.addEventListener('click', () => {
+            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            let konamiIndex = 0;
+            
+            function keyHandler(e) {
+                if (e.key === konamiCode[konamiIndex]) {
+                    konamiIndex++;
+                    if (konamiIndex === konamiCode.length) {
+                        // Konami code completed!
+                        document.body.style.animation = 'rainbow 5s infinite';
+                        showToast('Secret unlocked! Enjoy the rainbow mode!');
+                        document.removeEventListener('keydown', keyHandler);
+                        
+                        // Add rainbow animation
+                        const style = document.createElement('style');
+                        style.innerHTML = `
+                            @keyframes rainbow {
+                                0% { filter: hue-rotate(0deg); }
+                                100% { filter: hue-rotate(360deg); }
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                } else {
+                    konamiIndex = 0;
+                }
+            }
+            
+            document.addEventListener('keydown', keyHandler);
+            showToast('Easter egg activated! Try entering the Konami code with your keyboard!');
+        });
+
+        // Scroll animation
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        function checkScroll() {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('load', checkScroll);
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+
+        // Initialize
+        initParticles();
+        renderGames();
+        setGameOfTheDay();
+        initVoiceSearch();
+        checkScroll();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEGATRON GAMES HUB</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <style>
+    /* ==== GLOBAL RESET ==== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ==== BODY STYLES ==== */
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ==== CRT EFFECT ==== */
+    body.crt::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        linear-gradient(rgba(18, 16, 16, 0.1) 50%, 
+        rgba(0, 0, 0, 0.25) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), 
+        rgba(0, 255, 0, 0.02), 
+        rgba(0, 0, 255, 0.06));
+      background-size: 100% 4px, 3px 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ==== PARTICLE BACKGROUND ==== */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* ==== HEADER STYLES ==== */
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 3px solid #e94560;
+      box-shadow: 0 0 20px #e94560;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        #e94560, 
+        #00dbde, 
+        #e94560, 
+        transparent);
+      filter: blur(10px);
+      animation: scanline 3s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { top: -10px; }
+      100% { top: 100%; }
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      background: linear-gradient(to right, #e94560, #00dbde, #e94560);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+      margin-bottom: 1rem;
+      animation: glitch 2s infinite alternate;
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    /* ==== CONTROLS ==== */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    input[type="text"] {
+      padding: 0.8rem 1.5rem;
+      border: 2px solid #e94560;
+      border-radius: 50px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-family: 'Orbitron';
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      width: 300px;
+      max-width: 100%;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 15px #e94560;
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(45deg, #1a1a2e, #e94560);
+      color: white;
+      font-family: 'Orbitron';
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #e94560, #1a1a2e);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    button:hover::before {
+      opacity: 1;
+    }
+
+    button:active {
+      transform: translateY(3px);
+    }
+
+    #voice-btn.listening {
+      animation: pulse 1s infinite, rainbow 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes rainbow {
+      0% { background: linear-gradient(45deg, #ff0000, #1a1a2e); }
+      14% { background: linear-gradient(45deg, #ff7f00, #1a1a2e); }
+      28% { background: linear-gradient(45deg, #ffff00, #1a1a2e); }
+      42% { background: linear-gradient(45deg, #00ff00, #1a1a2e); }
+      57% { background: linear-gradient(45deg, #0000ff, #1a1a2e); }
+      71% { background: linear-gradient(45deg, #4b0082, #1a1a2e); }
+      85% { background: linear-gradient(45deg, #9400d3, #1a1a2e); }
+      100% { background: linear-gradient(45deg, #ff0000, #1a1a2e); }
+    }
+
+    /* ==== GAME GRID ==== */
+    #game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 3rem;
+      max-width: 2000px;
+      margin: 0 auto;
+    }
+
+    .game-card {
+      background: linear-gradient(145deg, #1a1a2e, #16213e);
+      border: 2px solid #e94560;
+      border-radius: 15px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(233, 69, 96, 0.1),
+        rgba(233, 69, 96, 0),
+        rgba(233, 69, 96, 0.1)
+      );
+      transform: rotate(45deg);
+      z-index: 0;
+    }
+
+    .game-card:hover {
+      transform: translateY(-15px) rotateX(10deg) rotateY(5deg) scale(1.05);
+      box-shadow: 0 20px 50px rgba(233, 69, 96, 0.6);
+    }
+
+    .game-card:hover::before {
+      animation: shine 1.5s;
+    }
+
+    @keyframes shine {
+      0% { left: -50%; top: -50%; }
+      100% { left: 150%; top: 150%; }
+    }
+
+    .game-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      border: 2px solid #e94560;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .game-card:hover .game-img {
+      transform: scale(1.05) rotate(1deg);
+      box-shadow: 0 10px 25px rgba(233, 69, 96, 0.5);
+    }
+
+    .game-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #e94560;
+      position: relative;
+      display: inline-block;
+    }
+
+    .game-title::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, #e94560, transparent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .game-card:hover .game-title::after {
+      transform: scaleX(1);
+    }
+
+    .game-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .game-rating .stars {
+      color: #ffd700;
+      font-size: 1.2rem;
+    }
+
+    .game-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .game-actions button {
+      flex: 1;
+      padding: 0.7rem;
+      font-size: 0.9rem;
+      border-radius: 8px;
+    }
+
+    .buy-btn {
+      background: linear-gradient(45deg, #1b2838, #2a475e);
+    }
+
+    .download-btn {
+      background: linear-gradient(45deg, #e94560, #ff6b6b);
+    }
+
+    /* ==== VR MODE ==== */
+    #vr-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      display: none;
+    }
+
+    /* ==== RESPONSIVE DESIGN ==== */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      #game-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        padding: 1.5rem;
+      }
+      
+      .controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      input[type="text"] {
+        width: 100%;
+      }
+    }
+
+    /* ==== SPECIAL EFFECTS ==== */
+    .viewed-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #e94560;
+      color: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      animation: bounce 1s infinite alternate;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-5px); }
+    }
+
+    .crypto-price {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 0.3rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-family: 'Press Start 2P', cursive;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+    }
+
+    /* ==== LOADING ANIMATION ==== */
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0f0f1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .loading-spinner {
+      width: 80px;
+      height: 80px;
+      border: 8px solid rgba(233, 69, 96, 0.3);
+      border-top-color: #e94560;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ==== NEW INSANE FEATURES ==== */
+    /* Holographic Effect */
+    .holographic {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 150px;
+      height: 150px;
+      background: rgba(233, 69, 96, 0.1);
+      border-radius: 50%;
+      filter: blur(20px);
+      z-index: -1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    /* Cyberpunk Scanlines */
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        rgba(18, 16, 16, 0.1) 50%, 
+        rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* Explosion Effect */
+    .explosion {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e94560, transparent);
+      transform: scale(0);
+      opacity: 0;
+      z-index: 9997;
+      pointer-events: none;
+    }
+
+    /* Glitch Text */
+    .glitch-text {
+      position: relative;
+    }
+
+    .glitch-text::before, .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch-text::before {
+      color: #00dbde;
+      animation: glitch-effect 3s infinite;
+    }
+
+    .glitch-text::after {
+      color: #ff6b6b;
+      animation: glitch-effect 2s infinite reverse;
+    }
+
+    @keyframes glitch-effect {
+      0% { transform: translate(0); }
+      20% { transform: translate(-3px, 3px); }
+      40% { transform: translate(-3px, -3px); }
+      60% { transform: translate(3px, 3px); }
+      80% { transform: translate(3px, -3px); }
+      100% { transform: translate(0); }
+    }
+
+    /* Digital Rain */
+    .digital-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="glitch-text" data-text="INITIALIZING MEGATRON SYSTEM...">INITIALIZING MEGATRON SYSTEM...</div>
+  </div>
+
+  <!-- Particle Background -->
+  <div id="particles-js"></div>
+
+  <!-- Holographic Effects -->
+  <div class="holographic" style="left: 10%; bottom: 30%;"></div>
+  <div class="holographic" style="left: 70%; bottom: 20%; animation-delay: 2s;"></div>
+  <div class="holographic" style="left: 30%; bottom: 10%; animation-delay: 4s;"></div>
+
+  <!-- Scanlines -->
+  <div class="scanlines"></div>
+
+  <!-- Digital Rain -->
+  <canvas id="digital-rain" class="digital-rain"></canvas>
+
+  <!-- Main Content -->
+  <header>
+    <h1 class="glitch-text" data-text="MEGATRON GAMES HUB">MEGATRON GAMES HUB</h1>
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search 500 games..." autocomplete="off">
+      <button id="voice-btn">🎤 VOICE SEARCH</button>
+      <button id="crt-btn">🖥️ CRT MODE</button>
+      <button id="vr-btn">👓 VR MODE</button>
+      <button id="matrix-btn">📟 MATRIX MODE</button>
+      <button id="disco-btn">🌈 DISCO MODE</button>
+    </div>
+  </header>
+
+  <div id="game-grid"></div>
+
+  <!-- VR Container (hidden by default) -->
+  <div id="vr-container"></div>
+
+  <!-- Sound Effects -->
+  <audio id="robot-sound" src="https://www.myinstants.com/media/sounds/tf-transformer.mp3"></audio>
+  <audio id="click-sound" src="https://www.myinstants.com/media/sounds/metal-gear-solid-alert-sound.mp3"></audio>
+  <audio id="select-sound" src="https://www.myinstants.com/media/sounds/metal-gear-solid-codec-sound.mp3"></audio>
+  <audio id="explosion-sound" src="https://www.myinstants.com/media/sounds/explosion-1.mp3"></audio>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // ===== GAME DATA =====
+    function generateGames() {
+      const prefixes = ["Epic", "Mega", "Ultra", "Super", "Hyper", "Cyber", "Neon", "Quantum", "Atomic", "Galactic"];
+      const suffixes = ["Strike", "Warrior", "Legend", "Punch", "Blade", "Force", "Squad", "X", "Overdrive", "Apocalypse"];
+      const genres = ["FPS", "RPG", "Adventure", "Strategy", "Racing", "Horror", "Simulation", "Battle Royale", "MMO"];
+      
+      const games = [];
+      for (let i = 1; i <= 500; i++) {
+        const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+        const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+        const genre = genres[Math.floor(Math.random() * genres.length)];
+        
+        games.push({
+          id: i,
+          name: `${prefix} ${suffix} ${Math.floor(Math.random() * 10) + 1}`,
+          image: `https://picsum.photos/400/300?random=${i}&blur=${Math.floor(Math.random() * 2)}`,
+          steamUrl: `https://store.steampowered.com/app/${Math.floor(Math.random() * 100000)}`,
+          apkUrl: `https://example.com/download/${i}`,
+          rating: (Math.random() * 5).toFixed(1),
+          cryptoPrice: (Math.random() * 0.1).toFixed(4),
+          genre: genre,
+          players: Math.floor(Math.random() * 1000000).toLocaleString(),
+          viewed: false,
+          featured: Math.random() > 0.8
+        });
+      }
+      return games;
+    }
+
+    // ===== GLOBAL VARIABLES =====
+    let games = [];
+    let filteredGames = [];
+    let viewedGames = JSON.parse(localStorage.getItem('viewedGames')) || [];
+    let voiceRecognition;
+    let matrixInterval;
+    let discoInterval;
+    const sounds = {
+      robot: document.getElementById('robot-sound'),
+      click: document.getElementById('click-sound'),
+      select: document.getElementById('select-sound'),
+      explosion: document.getElementById('explosion-sound')
+    };
+
+    // ===== DOM ELEMENTS =====
+    const loadingScreen = document.getElementById('loading');
+    const gameGrid = document.getElementById('game-grid');
+    const searchInput = document.getElementById('search');
+    const voiceBtn = document.getElementById('voice-btn');
+    const crtBtn = document.getElementById('crt-btn');
+    const vrBtn = document.getElementById('vr-btn');
+    const matrixBtn = document.getElementById('matrix-btn');
+    const discoBtn = document.getElementById('disco-btn');
+    const vrContainer = document.getElementById('vr-container');
+    const digitalRainCanvas = document.getElementById('digital-rain');
+
+    // ===== INITIALIZATION =====
+    function init() {
+      // Simulate loading
+      setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+        }, 500);
+      }, 2500);
+
+      // Generate games
+      games = generateGames();
+      filteredGames = [...games];
+      
+      // Render games
+      renderGames();
+      
+      // Initialize effects
+      initParticles();
+      initDigitalRain();
+      
+      // Setup event listeners
+      setupEventListeners();
+    }
+
+    // ===== GAME RENDERING =====
+    function renderGames() {
+      gameGrid.innerHTML = '';
+      
+      filteredGames.forEach(game => {
+        const isViewed = viewedGames.includes(game.id);
+        const stars = '⭐'.repeat(Math.floor(game.rating)) + '☆'.repeat(5 - Math.floor(game.rating));
+        
+        const gameCard = document.createElement('div');
+        gameCard.className = 'game-card';
+        if (isViewed) {
+          gameCard.style.animation = 'pulse 2s infinite';
+        }
+        if (game.featured) {
+          gameCard.style.border = '2px solid #00dbde';
+          gameCard.style.boxShadow = '0 0 20px rgba(0, 219, 222, 0.5)';
+        }
+        
+        gameCard.innerHTML = `
+          ${isViewed ? '<span class="viewed-badge">VIEWED</span>' : ''}
+          ${game.featured ? '<span class="viewed-badge" style="background: #00dbde; left: 10px; right: auto;">FEATURED</span>' : ''}
+          <span class="crypto-price">${game.cryptoPrice} ETH</span>
+          <img src="${game.image}" alt="${game.name}" class="game-img">
+          <h3 class="game-title">${game.name}</h3>
+          <div class="game-rating">
+            <span class="stars">${stars}</span>
+            <span>${game.rating}/5</span>
+          </div>
+          <p>Genre: ${game.genre}</p>
+          <p>Players: ${game.players}</p>
+          <div class="game-actions">
+            <button class="buy-btn" onclick="buyGame(${game.id})">BUY ON STEAM</button>
+            <button class="download-btn" onclick="downloadGame(${game.id})">DOWNLOAD APK</button>
+          </div>
+        `;
+        
+        gameCard.addEventListener('click', () => viewGame(game.id));
+        gameGrid.appendChild(gameCard);
+      });
+    }
+
+    // ===== GAME INTERACTIONS =====
+    function viewGame(id) {
+      if (!viewedGames.includes(id)) {
+        viewedGames.push(id);
+        localStorage.setItem('viewedGames', JSON.stringify(viewedGames));
+        playSound('select');
+        renderGames();
+      }
+    }
+
+    function buyGame(id) {
+      const game = games.find(g => g.id === id);
+      playSound('robot');
+      createExplosion(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+      alert(`🚀 TRANSACTION INITIATED!\nPurchased "${game.name}" for ${game.cryptoPrice} ETH!\nRedirecting to Steam...`);
+      setTimeout(() => {
+        window.open(game.steamUrl, '_blank');
+      }, 2000);
+    }
+
+    function downloadGame(id) {
+      const game = games.find(g => g.id === id);
+      playSound('click');
+      createExplosion(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+      alert(`⚠️ WARNING: Third-party download!\nGame: "${game.name}"\nProceed at your own risk!`);
+      setTimeout(() => {
+        window.open(game.apkUrl, '_blank');
+      }, 1500);
+    }
+
+    // ===== SEARCH FUNCTIONALITY =====
+    function filterGames() {
+      const term = searchInput.value.toLowerCase();
+      filteredGames = games.filter(game => 
+        game.name.toLowerCase().includes(term) || 
+        game.genre.toLowerCase().includes(term)
+      );
+      renderGames();
+      
+      // Add explosion effect when searching
+      if (term.length > 0) {
+        createExplosion(
+          searchInput.offsetLeft + searchInput.offsetWidth / 2,
+          searchInput.offsetTop + searchInput.offsetHeight / 2
+        );
+      }
+    }
+
+    // ===== VOICE SEARCH =====
+    function setupVoiceSearch() {
+      if ('webkitSpeechRecognition' in window) {
+        voiceRecognition = new webkitSpeechRecognition();
+        voiceRecognition.continuous = false;
+        voiceRecognition.interimResults = false;
+        
+        voiceRecognition.onstart = () => {
+          voiceBtn.classList.add('listening');
+          playSound('robot');
+          createExplosion(
+            voiceBtn.offsetLeft + voiceBtn.offsetWidth / 2,
+            voiceBtn.offsetTop + voiceBtn.offsetHeight / 2
+          );
+        };
+        
+        voiceRecognition.onresult = (e) => {
+          const transcript = e.results[0][0].transcript;
+          searchInput.value = transcript;
+          filterGames();
+        };
+        
+        voiceRecognition.onerror = () => {
+          voiceBtn.classList.remove('listening');
+        };
+        
+        voiceRecognition.onend = () => {
+          voiceBtn.classList.remove('listening');
+        };
+      } else {
+        voiceBtn.disabled = true;
+        voiceBtn.title = "Voice search not supported in your browser";
+      }
+    }
+
+    // ===== SPECIAL EFFECTS =====
+    function toggleCRT() {
+      document.body.classList.toggle('crt');
+      playSound('click');
+      createExplosion(
+        crtBtn.offsetLeft + crtBtn.offsetWidth / 2,
+        crtBtn.offsetTop + crtBtn.offsetHeight / 2
+      );
+    }
+
+    function enterVRMode() {
+      playSound('robot');
+      createExplosion(
+        vrBtn.offsetLeft + vrBtn.offsetWidth / 2,
+        vrBtn.offsetTop + vrBtn.offsetHeight / 2
+      );
+      
+      document.body.innerHTML = `
+        <a-scene>
+          <a-sky color="#0f0f1a"></a-sky>
+          <a-entity position="0 0 -5">
+            <a-text 
+              value="MEGATRON VR MODE" 
+              color="#e94560" 
+              position="0 2.5 0"
+              scale="3 3 3"
+              align="center"
+            ></a-text>
+            <a-box 
+              color="#e94560" 
+              position="0 0 0"
+              rotation="0 45 45"
+              scale="2 2 2"
+            ></a-box>
+            <a-text 
+              value="Say 'EXIT' to return" 
+              color="#00dbde" 
+              position="0 -1 0"
+              scale="1.5 1.5 1.5"
+              align="center"
+            ></a-text>
+          </a-entity>
+          <a-camera>
+            <a-cursor></a-cursor>
+          </a-camera>
+        </a-scene>
+      `;
+    }
+
+    function activateMatrixMode() {
+      playSound('robot');
+      createExplosion(
+        matrixBtn.offsetLeft + matrixBtn.offsetWidth / 2,
+        matrixBtn.offsetTop + matrixBtn.offsetHeight / 2
+      );
+      
+      document.body.classList.add('crt');
+      document.body.style.background = '#000';
+      
+      // Create falling code effect
+      const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.top = '0';
+      container.style.left = '0';
+      container.style.width = '100%';
+      container.style.height = '100%';
+      container.style.zIndex = '9998';
+      container.style.pointerEvents = 'none';
+      container.style.fontFamily = "'Press Start 2P', cursive";
+      container.style.fontSize = '18px';
+      container.style.color = '#00ff00';
+      container.style.lineHeight = '1.2';
+      document.body.appendChild(container);
+      
+      // Create columns of falling characters
+      const columnCount = Math.floor(window.innerWidth / 20);
+      for (let i = 0; i < columnCount; i++) {
+        const column = document.createElement('div');
+        column.style.position = 'absolute';
+        column.style.top = '-100%';
+        column.style.left = `${i * 20}px`;
+        column.style.width = '20px';
+        column.style.wordBreak = 'break-all';
+        container.appendChild(column);
+        
+        // Animate column
+        animateColumn(column);
+      }
+      
+      // Set timeout to exit matrix mode
+      setTimeout(() => {
+        document.body.classList.remove('crt');
+        document.body.style.background = '';
+        container.remove();
+      }, 10000);
+    }
+    
+    function animateColumn(column) {
+      const speed = 50 + Math.random() * 100;
+      const length = 10 + Math.floor(Math.random() * 20);
+      let position = -100;
+      
+      function update() {
+        position += 1;
+        column.style.top = `${position}px`;
+        
+        // Generate random characters
+        let content = '';
+        for (let i = 0; i < length; i++) {
+          content += Math.random() > 0.1 ? 
+            chars[Math.floor(Math.random() * chars.length)] : 
+            ' ';
+        }
+        column.textContent = content;
+        
+        if (position < window.innerHeight) {
+          requestAnimationFrame(update);
+        } else {
+          // Reset column
+          position = -100;
+          setTimeout(update, Math.random() * 2000);
+        }
+      }
+      
+      update();
+    }
+
+    function activateDiscoMode() {
+      playSound('robot');
+      createExplosion(
+        discoBtn.offsetLeft + discoBtn.offsetWidth / 2,
+        discoBtn.offsetTop + discoBtn.offsetHeight / 2
+      );
+      
+      const colors = ['#e94560', '#00dbde', '#ff00ff', '#ffff00', '#00ff00', '#0000ff'];
+      let currentIndex = 0;
+      
+      discoInterval = setInterval(() => {
+        document.body.style.background = colors[currentIndex];
+        currentIndex = (currentIndex + 1) % colors.length;
+        
+        // Random explosions during disco
+        if (Math.random() > 0.7) {
+          createExplosion(
+            Math.random() * window.innerWidth,
+            Math.random() * window.innerHeight
+          );
+        }
+      }, 300);
+      
+      // Stop after 15 seconds
+      setTimeout(() => {
+        clearInterval(discoInterval);
+        document.body.style.background = '';
+      }, 15000);
+    }
+
+    function createExplosion(x, y) {
+      playSound('explosion');
+      
+      const explosion = document.createElement('div');
+      explosion.className = 'explosion';
+      explosion.style.left = `${x}px`;
+      explosion.style.top = `${y}px`;
+      document.body.appendChild(explosion);
+      
+      // Animate explosion
+      let scale = 0;
+      let opacity = 1;
+      const animation = () => {
+        scale += 0.1;
+        opacity -= 0.02;
+        explosion.style.transform = `scale(${scale})`;
+        explosion.style.opacity = opacity;
+        
+        if (opacity > 0) {
+          requestAnimationFrame(animation);
+        } else {
+          explosion.remove();
+        }
+      };
+      
+      requestAnimationFrame(animation);
+    }
+
+    function initDigitalRain() {
+      const canvas = digitalRainCanvas;
+      const ctx = canvas.getContext('2d');
+      
+      // Set canvas size
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      // Characters
+      const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+      
+      // Columns
+      const fontSize = 18;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = [];
+      
+      for (let i = 0; i < columns; i++) {
+        drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+      }
+      
+      function draw() {
+        // Semi-transparent black background
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Set font
+        ctx.font = `${fontSize}px 'Press Start 2P'`;
+        ctx.fillStyle = '#00ff00';
+        
+        // Draw characters
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+          
+          // Reset drop at random intervals
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          
+          drops[i]++;
+        }
+      }
+      
+      // Animation loop
+      setInterval(draw, 33);
+      
+      // Resize handler
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    }
+
+    // ===== UTILITY FUNCTIONS =====
+    function initParticles() {
+      particlesJS('particles-js', {
+        particles: {
+          number: { value: 80 },
+          color: { value: '#e94560' },
+          shape: { type: 'circle' },
+          opacity: { value: 0.5, random: true },
+          size: { value: 3, random: true },
+          line_linked: { 
+            enable: true,
+            distance: 150,
+            color: '#e94560',
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: 'none',
+            random: true,
+            straight: false,
+            out_mode: 'out',
+            bounce: false,
+            attract: { enable: true, rotateX: 600, rotateY: 1200 }
+          }
+        },
+        interactivity: {
+          detect_on: 'window',
+          events: {
+            onhover: { enable: true, mode: 'repulse' },
+            onclick: { enable: true, mode: 'push' },
+            resize: true
+          },
+          modes: {
+            repulse: { distance: 100, duration: 0.4 },
+            push: { particles_nb: 4 }
+          }
+        },
+        retina_detect: true
+      });
+    }
+
+    function playSound(type) {
+      if (sounds[type]) {
+        sounds[type].currentTime = 0;
+        sounds[type].play();
+      }
+    }
+
+    function setupEventListeners() {
+      // Search input
+      searchInput.addEventListener('input', filterGames);
+      
+      // Voice search button
+      voiceBtn.addEventListener('click', () => {
+        if (voiceRecognition) {
+          if (voiceBtn.classList.contains('listening')) {
+            voiceRecognition.stop();
+          } else {
+            voiceRecognition.start();
+          }
+        }
+      });
+      
+      // CRT mode button
+      crtBtn.addEventListener('click', toggleCRT);
+      
+      // VR mode button
+      vrBtn.addEventListener('click', enterVRMode);
+      
+      // Matrix mode button
+      matrixBtn.addEventListener('click', activateMatrixMode);
+      
+      // Disco mode button
+      discoBtn.addEventListener('click', activateDiscoMode);
+      
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('crt')) {
+          document.body.classList.remove('crt');
+        }
+      });
+    }
+
+    // ===== GLOBAL FUNCTIONS =====
+    window.buyGame = buyGame;
+    window.downloadGame = downloadGame;
+
+    // ===== START THE APP =====
+    document.addEventListener('DOMContentLoaded', () => {
+      setupVoiceSearch();
+      init();
+    });
+  </script>
+</body>
+</html>
